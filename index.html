@@ -2,17 +2,407 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>D3 Page Template</title>
+		<title>Social Data Analysis and Data Visualization: Assignment 2</title>
 		<script type="text/javascript" src="d3/d3.js"></script>
+		<style type="text/css">
+		
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+			
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+			
+			#tooltip {
+				position: absolute;
+				width: auto;
+				height: auto;
+				padding: 10px;
+				background-color: lightblue;
+				-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				border-radius: 10px;
+				-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+			}
+			
+			#tooltip.hidden {
+				display: none;
+			}
+			
+			#tooltip p {
+				margin: 0;
+				font-family: sans-serif;
+				font-size: 14px;
+				line-height: 20px;
+			}
+			
+			
+			
+			svg text {
+				pointer-events: none;
+			}
+
+		</style>
 	</head>
 	<body>
+		
+		<div id="tooltip" class="hidden">
+			<p><strong>District: </strong><span id="district">100</span></p>
+			<p><strong>Total crime: </strong><span id="totalCrime">100</span></p>
+			<p><strong>Prostitution crime: </strong><span id="prostitutionCrime">100</span></p>
+			<p><strong>Vehicle-theft crime: </strong><span id="vehicleCrime">100</span></p>
+		</div>
+	
+		<p id="2003">Click on this text to visualize 2003 data.</p>
+		<p id="2015">Click on this text to visualize 2015 data.</p>
+		<p id="label_id">Click on this text to show/hide the District labels.</p>
+		<p>Hover over the dots in order to see the District and the Total Crime for each one.</p>
+		
+
 		<script type="text/javascript">
-			// Your beautiful D3 code will go here
-			d3.select("body").append("p").text("New paragraph!");
-			var dataset = [ 5, 10, 15, 20, 25 ];
-			d3.csv("food.csv", function(data) {
-				console.log(data);
+			var dataset2003;
+			var dataset2015;
+			var dataset;
+			var dots_labels = true;
+			//Width and height
+			var w = 800;
+			var h = 450;
+			var xpadding = 60;
+			var ypadding = 50;
+			var Rmin = 3;
+			var Rmax = 6;
+			
+			
+			d3.csv("Dataset/data2003.csv", function(data) {
+				dataset2003 = data;
+				d3.csv("Dataset/data2015.csv", function(data) {
+					dataset2015 = data;    //Once loaded, copy to dataset.
+					scatter_plot();
+				});
+			    //Once loaded, copy to dataset.
+				
 			});
+			
+			var colors = d3.scale.category10();
+			
+			function scatter_plot(){
+				//Create scale functions
+				var xScale = d3.scale.linear()
+						   //.domain([d3.min(dataset, function(d) { return parseInt(d["Prostitution"]);   }), 
+						   .domain([0, 
+							1.05*d3.max([d3.max(dataset2003, function(d) { return parseInt(d["Prostitution"]);   }), 
+							d3.max(dataset2015, function(d) { return parseInt(d["Prostitution"]);   })])])
+						   .range([xpadding, w-xpadding*3]);
+		  
+				var yScale = d3.scale.linear()
+						   //.domain([d3.min(dataset, function(d) { return parseInt(d["Vehicle_theft"]);   }), 
+						   .domain([0, 
+							1.05*d3.max([d3.max(dataset2003, function(d) { return parseInt(d["Vehicle_theft"]);   }), 
+							d3.max(dataset2015, function(d) { return parseInt(d["Vehicle_theft"]);   })])])
+						   .range([h-ypadding, ypadding]);
+
+				var rScale = d3.scale.linear()
+						   .domain([d3.min([d3.min(dataset2003, function(d) { return parseInt(d["Total_crime"]);   }), 
+						   d3.min(dataset2015, function(d) { return parseInt(d["Total_crime"]);   })]), 
+							d3.max([d3.max(dataset2003, function(d) { return parseInt(d["Total_crime"]);   }), 
+							d3.max(dataset2015, function(d) { return parseInt(d["Total_crime"]);   })])])
+						   .range([Rmin, Rmax]);
+
+							   
+				//Define X axis
+				var xAxis = d3.svg.axis()
+								  .scale(xScale)
+								  .orient("bottom")
+								  .ticks(5);
+								  
+				//Define Y axis
+				var yAxis = d3.svg.axis()
+								  .scale(yScale)
+								  .orient("left")
+								  .ticks(5);
+							 
+				// Define the div for the tooltip
+				var div = d3.select("body").append("div")	
+					.attr("class", "tooltip")				
+					.style("opacity", 0);
+			
+				//Create SVG element
+				var svg = d3.select("body")
+							.append("svg")
+							.attr("width", w)
+							.attr("height", h);
+		  
+		  
+				//Define clipping path
+				svg.append("clipPath")
+					.attr("id", "chart-area")
+					.append("rect")
+					.attr("x", xpadding)
+					.attr("y", ypadding)
+					.attr("width", w - xpadding * 3)
+					.attr("height", h - ypadding * 2);
+
+				//Create circles
+				svg.append("g")
+				   .attr("id", "circles")
+				   .attr("clip-path", "url(#chart-area)")
+				   .selectAll("circle")
+				   .data(dataset2003)
+				   .enter()
+				   .append("circle")
+				   .attr("cx", function(d) {
+					  return xScale(parseInt(d["Prostitution"]));
+				   })
+				   .attr("cy", function(d) {
+					  return yScale(parseInt(d["Vehicle_theft"]));
+				   })
+				   .attr("r", function(d) {
+					  return rScale(parseInt(d["Total_crime"]));
+
+				   })
+				   .style("fill", function(d, i) {
+					  return colors(i);
+				   })
+				   .on("mouseover", function(d) {
+						
+						d3.select(this)
+			   			  //.attr("fill", "orange")
+						  .attr("r", "10px");
+						
+						//Get this bar's x/y values, then augment for the tooltip
+						var xPosition = d3.event.pageX + 5;
+						var yPosition = d3.event.pageY - 100;
+
+						//Update the tooltip position and value
+						d3.select("#tooltip")
+							.style("left", xPosition + "px")
+							.style("top", yPosition + "px")						
+							.select("#district")
+							.text(d["District"]);
+							
+						d3.select("#tooltip")
+							.select("#totalCrime")
+							.text(d["Total_crime"]);
+							
+						d3.select("#tooltip")
+							.select("#prostitutionCrime")
+							.text(d["Prostitution"]);
+							
+						d3.select("#tooltip")
+							.select("#vehicleCrime")
+							.text(d["Vehicle_theft"]);
+				   
+						//Show the tooltip
+						d3.select("#tooltip").classed("hidden", false);
+
+				   })
+				   .on("mouseout", function() {
+						
+						d3.select(this)
+						  .transition()
+						  .duration(500)
+			   			  //.attr("fill", "black")
+						  .attr("r", function(d) {
+							  return rScale(parseInt(d["Total_crime"]));
+						  })
+						  
+						//Hide the tooltip
+						d3.select("#tooltip").classed("hidden", true);
+						
+				   })/*
+				   .on("mouseover", function(d) {
+
+						d3.select(this)
+			   			  .attr("fill", "orange")
+						  .attr("r", "8px");
+						  
+						div.transition()		
+							.duration(200)		
+							.style("opacity", .9);		
+						div.html("District: " + d["District"] + "<br/>Total crime: "  + d["Total_crime"])	
+							.style("left", (d3.event.pageX + 5) + "px")		
+							.style("top", (d3.event.pageY - 28) + "px");	
+						})					
+					.on("mouseout", function(d) {
+
+						d3.select(this)
+						  .transition()
+						  .duration(500)
+			   			  .attr("fill", "black")
+						  .attr("r", function(d) {
+							  return rScale(parseInt(d["Total_crime"]));
+						  })
+						  
+						div.transition()		
+							.duration(500)		
+							.style("opacity", 0);	
+					})*/;
+				   
+				
+				//Create labels
+				svg.selectAll("text")
+				   .data(dataset2003)
+				   .enter()
+				   .append("text")
+				   .text(function(d) {
+					  return d["District"];
+				   })
+				   .attr("x", function(d) {
+					  return xScale(parseInt(d["Prostitution"]));
+				   })
+				   .attr("y", function(d) {
+					  return yScale(parseInt(d["Vehicle_theft"]));
+				   })
+				   .attr("font-family", "sans-serif")
+				   .attr("font-size", "11px")
+				   .attr("fill", "black")
+				   .attr("opacity", 1);
+				   
+				//Create X axis
+				svg.append("g")
+					.attr("class", "x axis")
+					.attr("transform", "translate(0," + (h - ypadding) + ")")
+					.call(xAxis);
+				
+				//Create Y axis
+				svg.append("g")
+					.attr("class", "y axis")
+					.attr("transform", "translate(" + xpadding + ",0)")
+					.call(yAxis);
+					
+				// Add title to the plot
+				svg.append("text")
+					.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+					.attr("transform", "translate("+ (w/2*0.85) +"," + ypadding/2 + ")")  // text is drawn off the screen top left, move down and out and rotate
+					.attr("font-size", "22px")
+					.attr("font-weight", "bold")
+					.attr("id", "plot_title")
+					.text("2003 crimes");
+				
+				// Add titles to the axes
+				svg.append("text")
+					.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+					.attr("transform", "translate("+ (xpadding/5) +","+(h/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+					.text("Vehicle-theft crimes");
+
+				svg.append("text")
+					.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+					.attr("transform", "translate("+ (w/2*0.85) +","+(h-(ypadding/5))+")")  // centre below axis
+					.text("Prostitution crimes");
+					
+				//On click, update with new data			
+				d3.selectAll("p")
+					.on("click", function() {
+						
+						//See which p was clicked
+						var paragraphID = d3.select(this).attr("id");
+						
+						//Decide what to do next
+						if (paragraphID == "2003") {
+							// 2003 data
+							dataset = dataset2003;
+						} else if (paragraphID == "2015") {
+							// 2015 data
+							dataset = dataset2015;
+						} else if (paragraphID == "label_id") {
+							
+							if (dots_labels == true) {
+							
+								if (dataset == null) {
+									dataset = dataset2003;
+								} 
+								
+								//Create labels
+								svg.selectAll("text")
+								   .data(dataset)
+								   .transition()
+								   .duration(1000)
+								   .attr("x", w)
+								   .attr("y", h)
+								   .attr("opacity", 0);
+								
+								dots_labels = false;
+							} 
+							else if (dots_labels == false) {
+							
+								if (dataset == null) {
+									dataset = dataset2003;
+								} 
+								
+								//Create labels
+								svg.selectAll("text")
+								   .data(dataset)
+								   .transition()
+								   .duration(1000)
+								   .attr("x", function(d) {
+									  return xScale(parseInt(d["Prostitution"]));
+								   })
+								   .attr("y", function(d) {
+									  return yScale(parseInt(d["Vehicle_theft"]));
+								   })
+								   .attr("opacity", 1);
+								
+								dots_labels = true;
+							}
+							
+						}
+
+						//Update all circles
+						svg.selectAll("circle")
+						   .data(dataset)
+						   .transition()
+						   .duration(1000)
+						   //Create circles
+						   .attr("cx", function(d) {
+							  return xScale(parseInt(d["Prostitution"]));
+						   })
+						   .attr("cy", function(d) {
+							  return yScale(parseInt(d["Vehicle_theft"]));
+						   })
+						   .attr("r", function(d) {
+							  return rScale(parseInt(d["Total_crime"]));
+						   });
+						   
+						if (dots_labels == true) {
+							//Create labels
+							svg.selectAll("text")
+							   .data(dataset)
+							   .transition()
+							   .duration(1000)
+							   .text(function(d) {
+								  return d["District"];
+							   })
+							   .attr("x", function(d) {
+								  return xScale(parseInt(d["Prostitution"]));
+							   })
+							   .attr("y", function(d) {
+								  return yScale(parseInt(d["Vehicle_theft"]));
+							   })
+							   .attr("opacity", 1);
+						}
+						
+						if (dataset == dataset2015) {
+							d3.select("#plot_title")
+							  .text("2015 crimes");
+						} else {
+							d3.select("#plot_title")
+							  .text("2003 crimes");
+						}
+						
+						
+						
+					});
+		  
+			}
+			
 		</script>
 	</body>
 </html>
