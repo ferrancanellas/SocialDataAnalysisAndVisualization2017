@@ -44,8 +44,6 @@
 				line-height: 20px;
 			}
 			
-			
-			
 			svg text {
 				pointer-events: none;
 			}
@@ -66,7 +64,6 @@
 		<p id="label_id">Click on this text to show/hide the District labels.</p>
 		<p>Hover over the dots in order to see the District and the Total Crime for each one.</p>
 		
-
 		<script type="text/javascript">
 			var dataset2003;
 			var dataset2015;
@@ -80,15 +77,12 @@
 			var Rmin = 3;
 			var Rmax = 6;
 			
-			
 			d3.csv("Datasets/data2003.csv", function(data) {
-				dataset2003 = data;
+			    //Once loaded, copy to dataset.dataset2003 = data;
 				d3.csv("Datasets/data2015.csv", function(data) {
 					dataset2015 = data;    //Once loaded, copy to dataset.
 					scatter_plot();
 				});
-			    //Once loaded, copy to dataset.
-				
 			});
 			
 			var colors = d3.scale.category10();
@@ -115,7 +109,6 @@
 							d3.max([d3.max(dataset2003, function(d) { return parseInt(d["Total_crime"]);   }), 
 							d3.max(dataset2015, function(d) { return parseInt(d["Total_crime"]);   })])])
 						   .range([Rmin, Rmax]);
-
 							   
 				//Define X axis
 				var xAxis = d3.svg.axis()
@@ -139,7 +132,6 @@
 							.append("svg")
 							.attr("width", w)
 							.attr("height", h);
-		  
 		  
 				//Define clipping path
 				svg.append("clipPath")
@@ -217,35 +209,7 @@
 						//Hide the tooltip
 						d3.select("#tooltip").classed("hidden", true);
 						
-				   })/*
-				   .on("mouseover", function(d) {
-
-						d3.select(this)
-			   			  .attr("fill", "orange")
-						  .attr("r", "8px");
-						  
-						div.transition()		
-							.duration(200)		
-							.style("opacity", .9);		
-						div.html("District: " + d["District"] + "<br/>Total crime: "  + d["Total_crime"])	
-							.style("left", (d3.event.pageX + 5) + "px")		
-							.style("top", (d3.event.pageY - 28) + "px");	
-						})					
-					.on("mouseout", function(d) {
-
-						d3.select(this)
-						  .transition()
-						  .duration(500)
-			   			  .attr("fill", "black")
-						  .attr("r", function(d) {
-							  return rScale(parseInt(d["Total_crime"]));
-						  })
-						  
-						div.transition()		
-							.duration(500)		
-							.style("opacity", 0);	
-					})*/;
-				   
+				   });
 				
 				//Create labels
 				svg.selectAll("text")
@@ -352,7 +316,6 @@
 								
 								dots_labels = true;
 							}
-							
 						}
 
 						//Update all circles
@@ -396,13 +359,8 @@
 							d3.select("#plot_title")
 							  .text("2003 crimes");
 						}
-						
-						
-						
 					});
-		  
 			}
-			
 		</script>
 	</body>
 </html>
