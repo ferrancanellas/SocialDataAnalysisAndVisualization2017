@@ -78,7 +78,8 @@
 			var Rmax = 6;
 			
 			d3.csv("Datasets/data2003.csv", function(data) {
-			    //Once loaded, copy to dataset.dataset2003 = data;
+			    //Once loaded, copy to dataset.
+				dataset2003 = data;
 				d3.csv("Datasets/data2015.csv", function(data) {
 					dataset2015 = data;    //Once loaded, copy to dataset.
 					scatter_plot();
