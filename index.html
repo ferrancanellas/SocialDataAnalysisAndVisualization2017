@@ -102,6 +102,7 @@
 			var ypadding = 100;
 			var Rmin = 3;
 			var Rmax = 6;
+			var datasetLegend = [];
 			
 			d3.csv("Datasets/data2003.csv", function(data) {
 			    //Once loaded, copy to dataset.
@@ -110,6 +111,9 @@
 					dataset2015 = data;    //Once loaded, copy to dataset.
 					scatter_plot();
 				});
+				for (i=0; i<dataset2003.length; i++) {
+					datasetLegend.push(i);
+				}
 			});
 			
 			var colors = d3.scale.category10();
@@ -136,6 +140,10 @@
 							d3.max([d3.max(dataset2003, function(d) { return parseInt(d["Total_crime"]);   }), 
 							d3.max(dataset2015, function(d) { return parseInt(d["Total_crime"]);   })])])
 						   .range([Rmin, Rmax]);
+						   
+				var legendScale = d3.scale.linear()
+									.domain([0,9])
+									.range([ypadding + 10, h-ypadding-10]);
 							   
 				//Define X axis
 				var xAxis = d3.svg.axis()
@@ -257,6 +265,25 @@
 				   .attr("fill", "black")
 				   .attr("opacity", 1);
 				   
+				//Create dots labels legend
+				svg.append("g")
+				   .attr("id", "circles")
+				   .attr("clip-path", "url(#chart-area)")
+				   .selectAll("circle")
+				   .data(datasetLegend)
+				   .enter()
+				   .append("circle")
+				   .attr("cx", w-xpadding*2)
+				   .attr("cy", function(d, i) {
+					  //return (i/datasetLegend.length*0.7*h + (h*0.15));
+					  return legendScale(d);
+				   })
+				   .attr("r", 8)
+				   .style("fill", function(d, i) {
+					  return colors(i);
+				   })
+				   .attr("opacity", 1);
+				   
 				//Create X axis
 				svg.append("g")
 					.attr("class", "x axis")
@@ -325,9 +352,14 @@
 								   .data(dataset)
 								   .transition()
 								   .duration(1000)
-								   .attr("x", w)
-								   .attr("y", h)
-								   .attr("opacity", 0);
+								   /*.attr("x", w)
+								   .attr("y", h)*/
+								   .attr("x", w-xpadding*2+15)
+								   .attr("y", function(d, i) {
+										//return (i/datasetLegend.length*0.7*h + (h*0.15));
+										return legendScale(i)+4;
+								   })
+								   .attr("opacity", 1);
 								
 								dots_labels = false;
 							} 
