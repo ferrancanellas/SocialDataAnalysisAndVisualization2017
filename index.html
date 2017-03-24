@@ -415,7 +415,7 @@
 			var path = d3.geo.path()
 			.projection(projection);
 			//Load in GeoJSON data
-			d3.json("sfpddistricts.geojson", function(json) {
+			d3.json("Datasets/sfpddistricts.geojson", function(json) {
 				
 				//Bind data and create one path per GeoJSON feature
 				svg2.selectAll("path")
@@ -438,7 +438,7 @@
 					.attr("id", "kmeans_title")
 					.text("Showing K-means for K = 2");
 
-				d3.csv("kmeans.csv", function(data) {
+				d3.csv("Datasets/kmeans.csv", function(data) {
 					dataset_points = data;
 					circles = layer1.selectAll("circle")
 					.data(dataset_points)
@@ -458,7 +458,7 @@
 
 				});
 
-				d3.csv("centers.csv", function(centers){
+				d3.csv("Datasets/centers.csv", function(centers){
 					dataset_centers = centers;
 					centroids = layer2.selectAll("circle")
 					.data(dataset_centers)
