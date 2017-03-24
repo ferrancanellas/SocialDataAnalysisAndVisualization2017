@@ -100,8 +100,8 @@
 			var h = 500;
 			var xpadding = 70;
 			var ypadding = 100;
-			var Rmin = 3;
-			var Rmax = 6;
+			var Rmin = 4;
+			var Rmax = 9;
 			var datasetLegend = [];
 			
 			d3.csv("Datasets/data2003.csv", function(data) {
@@ -202,7 +202,7 @@
 						
 						d3.select(this)
 			   			  //.attr("fill", "orange")
-						  .attr("r", "10px");
+						  .attr("r", "11px");
 						
 						//Get this bar's x/y values, then augment for the tooltip
 						var xPosition = d3.event.pageX + 5;
@@ -303,7 +303,7 @@
 					.attr("font-size", "22px")
 					.attr("font-weight", "bold")
 					.attr("id", "plot_title")
-					.text("2003 crimes");
+					.text("San Francisco crimes per district (2003)");
 				
 				// Add titles to the axes
 				svg.append("text")
@@ -425,10 +425,10 @@
 						
 						if (dataset == dataset2015) {
 							d3.select("#plot_title")
-							  .text("2015 crimes");
+							  .text("San Francisco crimes per district (2015)");
 						} else {
 							d3.select("#plot_title")
-							  .text("2003 crimes");
+							  .text("San Francisco crimes per district (2003)");
 						}
 						
 					});
