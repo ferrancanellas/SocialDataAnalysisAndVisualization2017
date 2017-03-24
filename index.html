@@ -95,10 +95,10 @@
 			var dataset;
 			var dots_labels = true;
 			//Width and height
-			var w = 800;
-			var h = 450;
-			var xpadding = 60;
-			var ypadding = 50;
+			var w = 850;
+			var h = 500;
+			var xpadding = 70;
+			var ypadding = 100;
 			var Rmin = 3;
 			var Rmax = 6;
 			
@@ -285,7 +285,7 @@
 
 				svg.append("text")
 					.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-					.attr("transform", "translate("+ (w/2*0.85) +","+(h-(ypadding/5))+")")  // centre below axis
+					.attr("transform", "translate("+ (w/2*0.85) +","+(h-(ypadding/2))+")")  // centre below axis
 					.text("Prostitution crimes");
 					
 				//On click, update with new data			
