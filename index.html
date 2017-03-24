@@ -115,6 +115,11 @@
 				.style("font-family", "serif")
 			    .style("font-size", "16px");
 				
+			d3.select("body").append("p")
+				.text("The axes are not adaptive since being static is easier to compare the two datasets (from the two different years) and realize how the number of prostitution and vehicle-theft have changed over the years.")
+				.style("font-family", "serif")
+			    .style("font-size", "16px");
+				
 			// Append buttons
 			d3.select("body").append("button")
 			.attr("class", "button")
