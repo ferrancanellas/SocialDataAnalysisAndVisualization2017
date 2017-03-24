@@ -47,6 +47,29 @@
 			svg text {
 				pointer-events: none;
 			}
+			
+			.button {
+			  display: inline-block;
+			  padding: 15px 25px;
+			  font-size: 20px;
+			  cursor: pointer;
+			  text-align: center;
+			  text-decoration: none;
+			  outline: none;
+			  color: #fff;
+			  background-color: #4CAF50;
+			  border: none;
+			  border-radius: 15px;
+			  box-shadow: 0 9px #999;
+			}
+
+			.button:hover {background-color: #3e8e41}
+
+			.button:active {
+			  background-color: #3e8e41;
+			  box-shadow: 0 5px #666;
+			  transform: translateY(4px);
+			}
 
 		</style>
 	</head>
@@ -54,17 +77,17 @@
 		
 		<h1>Social Data Analysis and Visualization: Assignment 2</h1>
 		<h2>Assignment 2A: One scatter plot and two datasets</h2>
+		<p>The following plot represents the prostitution and vehicle-theft crimes (x and y axes, respectively) in the city of San Francisco for each of its districts during one year. Both data of 2003 and 2015 can be shown by <b>clicking the corresponding buttons below</b>. The size of the dots is proportional to the total number of crimes in each district during the whole year. The labels of each district can be hide and shown again clicking also the corresponding button text/below. By <b>hovering over the dots</b>, the exact number of prostitution, vehicle-theft and total crimes, as well as the corresponding district, can be visualized in a tooltip.</p>
+		<button class="button" style="background-color:rgb(255, 127, 14)" id="2003Button"><span>2003 </span></button>
+		<button class="button" style="background-color:rgb(23, 190, 207)" id="2015Button"><span>2015 </span></button>
+		<button class="button" style="background-color:rgb(214, 39, 40)" id="labelButton"><span>Show/hide labels </span></button>
+		
 		<div id="tooltip" class="hidden">
 			<p><strong>District: </strong><span id="district">example</span></p>
 			<p><strong>Total crime: </strong><span id="totalCrime">example</span></p>
 			<p><strong>Prostitution crime: </strong><span id="prostitutionCrime">example</span></p>
 			<p><strong>Vehicle-theft crime: </strong><span id="vehicleCrime">example</span></p>
 		</div>
-		
-		<p>The following plot represents the prostitution and vehicle-theft crimes (x and y axes, respectively) in the city of San Francisco for each of its districts during one year. Both data of 2003 and 2015 can be shown by <b>clicking the corresponding texts/buttons below</b>. The size of the dots is proportional to the total number of crimes in each district during the whole year. The labels of each district can be hide and shown again clicking also the corresponding button text/below. By <b>hovering over the dots</b>, the exact number of prostitution, vehicle-theft and total crimes, as well as the corresponding district, can be visualized in a tooltip.</p>
-		<p id="2003">Click on this text to visualize 2003 data.</p>
-		<p id="2015">Click on this text to visualize 2015 data.</p>
-		<p id="label_id">Click on this text to show/hide the district labels.</p>
 		
 		<script type="text/javascript">
 			var dataset2003;
@@ -266,26 +289,35 @@
 					.text("Prostitution crimes");
 					
 				//On click, update with new data			
-				d3.selectAll("p")
+				d3.selectAll("button")
 					.on("click", function() {
 						
 						//See which p was clicked
-						var paragraphID = d3.select(this).attr("id");
+						var buttonID = d3.select(this).attr("id");
 						
 						//Decide what to do next
-						if (paragraphID == "2003") {
+						if (buttonID == "2003Button") {
 							// 2003 data
 							dataset = dataset2003;
-						} else if (paragraphID == "2015") {
+							
+							//d3.select(this).style("background-color", "#4CAF50");
+							/*d3.select("#2015Button")
+							  .style("background-color", "#f44336");*/
+						} else if (buttonID == "2015Button") {
 							// 2015 data
 							dataset = dataset2015;
-						} else if (paragraphID == "label_id") {
+							
+							//d3.select(this).style("background-color", "#4CAF50");
+							/*d3.select("#2003Button")
+							  .style("background-color", "#f44336");*/
+						} else if (buttonID == "labelButton") {
 							
 							if (dots_labels == true) {
 							
 								if (dataset == null) {
 									dataset = dataset2003;
 								} 
+								d3.select(this).style("background-color", "#4CAF50");
 								
 								//Create labels
 								svg.selectAll("text")
@@ -304,6 +336,8 @@
 									dataset = dataset2003;
 								} 
 								
+								d3.select(this).style("background-color", "rgb(214, 39, 40)");
+								
 								//Create labels
 								svg.selectAll("text")
 								   .data(dataset)
@@ -319,6 +353,7 @@
 								
 								dots_labels = true;
 							}
+							
 						}
 
 						//Update all circles
@@ -362,6 +397,7 @@
 							d3.select("#plot_title")
 							  .text("2003 crimes");
 						}
+						
 					});
 			}
 		</script>
