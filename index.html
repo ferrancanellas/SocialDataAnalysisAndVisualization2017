@@ -195,13 +195,12 @@
 			.attr("width", w_kmeans)
 			.attr("height", h_kmeans);
 		
-		
 			d3.csv("Datasets/data2003.csv", function(data) {
 			    //Once loaded, copy to dataset.
 				dataset2003 = data;
 				d3.csv("Datasets/data2015.csv", function(data) {
 					dataset2015 = data;    //Once loaded, copy to dataset.
-					scatter_plot();
+					code();
 				});
 				
 				for (i=0; i<dataset2003.length; i++) {
@@ -211,7 +210,7 @@
 			
 			var colors = d3.scale.category10();
 			
-			function scatter_plot(){
+			function code(){
 				//Create scale functions
 				var xScale = d3.scale.linear()
 						   //.domain([d3.min(dataset, function(d) { return parseInt(d["Prostitution"]);   }), 
@@ -402,20 +401,24 @@
 					.attr("transform", "translate("+ (w/2*0.85) +","+(h-(ypadding/2))+")")  // centre below axis
 					.text("Prostitution crimes");
 		
-			var dataset_points = [];
-			var dataset_centers = [];
-			var colors_kmeans = ["deepskyblue", "greenyellow", "blueviolet", "gold", "crimson", "chocolate"]
-			//Define map projection
-			var projection = d3.geo.mercator()
-							   .center([-122.433701, 37.767683])
-							   .scale(190000)
-							   .translate([w_kmeans/2, h_kmeans/2]);
+				var kmeans_number = 2;
+				var kmeans_number_temporal;
+				var hoverID;
+				var buttonID;
+				var dataset_points = [];
+				var dataset_centers = [];
+				var colors_kmeans = ["deepskyblue", "greenyellow", "blueviolet", "gold", "crimson", "chocolate"]
+				//Define map projection
+				var projection = d3.geo.mercator()
+								   .center([-122.433701, 37.767683])
+								   .scale(190000)
+								   .translate([w_kmeans/2, h_kmeans/2]);
 
-			//Define path generator
-			var path = d3.geo.path()
-			.projection(projection);
-			//Load in GeoJSON data
-			d3.json("Datasets/sfpddistricts.geojson", function(json) {
+				//Define path generator
+				var path = d3.geo.path()
+				.projection(projection);
+				//Load in GeoJSON data
+				d3.json("sfpddistricts.geojson", function(json) {
 				
 				//Bind data and create one path per GeoJSON feature
 				svg2.selectAll("path")
@@ -438,7 +441,7 @@
 					.attr("id", "kmeans_title")
 					.text("Showing K-means for K = 2");
 
-				d3.csv("Datasets/kmeans.csv", function(data) {
+				d3.csv("kmeans.csv", function(data) {
 					dataset_points = data;
 					circles = layer1.selectAll("circle")
 					.data(dataset_points)
@@ -458,7 +461,7 @@
 
 				});
 
-				d3.csv("Datasets/centers.csv", function(centers){
+				d3.csv("centers.csv", function(centers){
 					dataset_centers = centers;
 					centroids = layer2.selectAll("circle")
 					.data(dataset_centers)
@@ -506,8 +509,8 @@
 			d3.selectAll("button")
 				.on("click", function() {
 					
-					//See which p was clicked
-					var buttonID = d3.select(this).attr("id");
+					//See which button was clicked
+					buttonID = d3.select(this).attr("id");
 					
 					//Decide what to do next
 					if (buttonID == "2003Button") {
@@ -571,84 +574,28 @@
 						
 					} 
 					else if (buttonID == "k2") {
-						
-						d3.select("#kmeans_title")
-						  .text("Showing K-means for K = 2");
-						  
-						circles.style("fill", function(d) {return colors_kmeans[parseInt(d.l2)];});
-						centroids.style("fill-opacity", function(d){
-							if (d.k == "2") {return "1";}
-							else {return "0";}
-						})
-						.style("stroke-opacity", function(d){
-							if (d.k == "2") {return "1";}
-							else {return "0";}
-
-						});
+						kmeans_number = 2;
+						kmeans_function(kmeans_number);
 					}
 					else if (buttonID == "k3") {
-						
-						d3.select("#kmeans_title")
-						  .text("Showing K-means for K = 3");
-						  
-						circles.style("fill", function(d) {return colors_kmeans[parseInt(d.l3)];});
-						centroids.style("fill-opacity", function(d){
-							if (d.k == "3") {return "1";}
-							else {return "0";}
-						})
-						.style("stroke-opacity", function(d){
-							if (d.k == "3") {return "1";}
-							else {return "0";}
-
-						});
+						kmeans_number = 3;
+						kmeans_function(kmeans_number);
 					}
 					else if (buttonID == "k4") {
-						
-						d3.select("#kmeans_title")
-						  .text("Showing K-means for K = 4");
-						  
-						circles.style("fill", function(d) {return colors_kmeans[parseInt(d.l4)];});
-						centroids.style("fill-opacity", function(d){
-							if (d.k == "4") {return "1";}
-							else {return "0";}
-						})
-						.style("stroke-opacity", function(d){
-							if (d.k == "4") {return "1";}
-							else {return "0";}
-
-						});
+						kmeans_number = 4;
+						kmeans_function(kmeans_number);
 					}
 					else if (buttonID == "k5") {
-						
-						d3.select("#kmeans_title")
-						  .text("Showing K-means for K = 5");
-						  
-						circles.style("fill", function(d) {return colors_kmeans[parseInt(d.l5)];});
-						centroids.style("fill-opacity", function(d){
-							if (d.k == "5") {return "1";}
-							else {return "0";}
-						})
-						.style("stroke-opacity", function(d){
-							if (d.k == "5") {return "1";}
-							else {return "0";}
-
-						});
+						kmeans_number = 5;
+						kmeans_function(kmeans_number);
 					}
 					else if (buttonID == "k6") {
-						
-						d3.select("#kmeans_title")
-						  .text("Showing K-means for K = 6");
-						  
-						circles.style("fill", function(d) {return colors_kmeans[parseInt(d.l6)];});
-						centroids.style("fill-opacity", function(d){
-							if (d.k == "6") {return "1";}
-							else {return "0";}
-						})
-						.style("stroke-opacity", function(d){
-							if (d.k == "6") {return "1";}
-							else {return "0";}
-
-						});
+						kmeans_number = 6;
+						kmeans_function(kmeans_number);
+					}
+					
+					if (dataset == null) {
+						dataset = dataset2003;
 					}
 
 					//Update all circles
@@ -685,6 +632,39 @@
 						   .attr("opacity", 1);
 					}
 				});
+				
+				//On click, update with new data			
+				d3.selectAll("button")
+					.on("mouseover", function() {
+						//See which button was hover-over
+						hoverID = d3.select(this).attr("id");
+						kmeans_number_temporal = hoverID.slice(-1);
+						kmeans_function(kmeans_number_temporal);
+					})
+					.on("mouseout", function() {
+						kmeans_function(kmeans_number);
+					});
+					
+				function kmeans_function(k) {
+					
+					// k can be k2, k3, k4, k5, k6
+					// We are interested in the last number
+					//var number = k.slice(-1);
+					
+					d3.select("#kmeans_title")
+						  .text("Showing K-means for K = " + k);
+						  
+					circles.style("fill", function(d) {return colors_kmeans[parseInt(d["l" + k])];});
+					centroids.style("fill-opacity", function(d){
+						if (d.k == k) {return "1";}
+						else {return "0";}
+					})
+					.style("stroke-opacity", function(d){
+						if (d.k == k) {return "1";}
+						else {return "0";}
+
+					});
+				}
 			}
 		</script>
 	</body>
