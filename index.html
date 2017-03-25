@@ -171,13 +171,13 @@
 			d3.select("body").append("button")
 			.attr("class", "button")
 			.attr("id", "k2")
-			.style("background-color", "rgb(255, 127, 14)")
+			.style("background-color", "rgb(44, 160, 44)")
 			.text("K2");
 			
 			d3.select("body").append("button")
 			.attr("class", "button")
 			.attr("id", "k3")
-			.style("background-color", "rgb(23, 190, 207)")
+			.style("background-color", "rgb(214, 39, 40)")
 			.text("K3");
 			
 			d3.select("body").append("button")
@@ -189,13 +189,13 @@
 			d3.select("body").append("button")
 			.attr("class", "button")
 			.attr("id", "k5")
-			.style("background-color", "rgb(44, 160, 44)")
+			.style("background-color", "rgb(214, 39, 40)")
 			.text("K5");
 			
 			d3.select("body").append("button")
 			.attr("class", "button")
 			.attr("id", "k6")
-			.style("background-color", "rgb(227, 119, 194)")
+			.style("background-color", "rgb(214, 39, 40)")
 			.text("K6");
 			
 			d3.select("body").append("p")
@@ -603,22 +603,27 @@
 						} 
 						//K-means buttons
 						else if (buttonID == "k2") {
+							kmeans_buttons_colors(buttonID);
 							kmeans_number = 2;
 							kmeans_function(kmeans_number);
 						}
 						else if (buttonID == "k3") {
+							kmeans_buttons_colors(buttonID);
 							kmeans_number = 3;
 							kmeans_function(kmeans_number);
 						}
 						else if (buttonID == "k4") {
+							kmeans_buttons_colors(buttonID);
 							kmeans_number = 4;
 							kmeans_function(kmeans_number);
 						}
 						else if (buttonID == "k5") {
+							kmeans_buttons_colors(buttonID);
 							kmeans_number = 5;
 							kmeans_function(kmeans_number);
 						}
 						else if (buttonID == "k6") {
+							kmeans_buttons_colors(buttonID);
 							kmeans_number = 6;
 							kmeans_function(kmeans_number);
 						}
@@ -694,6 +699,18 @@
 						else {return "0";}
 
 					});
+				}
+				
+				function kmeans_buttons_colors(k) {
+					//Set the color of the 'k' button to green
+					d3.select("#" + k).style("background-color", "rgb(44, 160, 44)");
+					var kmeans_options = ["k2", "k3", "k4", "k5", "k6"]
+					//Delete the element equals to 'k' from the kmeans_options array
+					kmeans_options.splice(kmeans_options.indexOf(k), 1);
+					//Set the color to red of all the kx buttons but the one clicked (k)
+					for (var i = 0; i < kmeans_options.length; i++) {
+						d3.select("#" + kmeans_options[i]).style("background-color", "rgb(214, 39, 40)");
+					}
 				}
 			}
 		</script>
