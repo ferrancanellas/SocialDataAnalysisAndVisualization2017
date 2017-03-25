@@ -307,8 +307,8 @@
 				   .style("opacity", 0.9)
 				   .on("mouseover", function(d) {
 						
+						//Increase the dots size
 						d3.select(this)
-			   			  //.attr("fill", "orange")
 						  .attr("r", "11px");
 						
 						//Get this bar's x/y values, then augment for the tooltip
@@ -340,10 +340,10 @@
 				   })
 				   .on("mouseout", function() {
 						
+						//Return the dots to the original size
 						d3.select(this)
 						  .transition()
 						  .duration(500)
-			   			  //.attr("fill", "black")
 						  .attr("r", function(d) {
 							  return rScale(parseInt(d["Total_crime"]));
 						  })
@@ -380,7 +380,6 @@
 				   .append("circle")
 				   .attr("cx", w-xpadding*2)
 				   .attr("cy", function(d, i) {
-					  //return (i/datasetLegend.length*0.7*h + (h*0.15));
 					  return legendScale(d);
 				   })
 				   .attr("r", 8)
@@ -403,8 +402,8 @@
 					
 				// Add title to the plot
 				svg.append("text")
-					.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-					.attr("transform", "translate("+ (w/2*0.85) +"," + ypadding/2 + ")")  // text is drawn off the screen top left, move down and out and rotate
+					.attr("text-anchor", "middle") 
+					.attr("transform", "translate("+ (w/2*0.85) +"," + ypadding/2 + ")")
 					.attr("font-size", "22px")
 					.attr("font-weight", "bold")
 					.attr("id", "plot_title")
@@ -412,12 +411,12 @@
 				
 				// Add titles to the axes
 				svg.append("text")
-					.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+					.attr("text-anchor", "middle")
 					.attr("transform", "translate("+ (xpadding/5) +","+(h/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
 					.text("Vehicle-theft crimes");
 
 				svg.append("text")
-					.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+					.attr("text-anchor", "middle")
 					.attr("transform", "translate("+ (w/2*0.85) +","+(h-(ypadding/2))+")")  // centre below axis
 					.text("Prostitution crimes");
 				
@@ -456,8 +455,8 @@
 					
 					//Add title to the plot
 					svg2.append("text")
-						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-						.attr("transform", "translate("+ (w_kmeans/2*0.85) +"," + ypadding/2 + ")")  // text is drawn off the screen top left, move down and out and rotate
+						.attr("text-anchor", "middle")
+						.attr("transform", "translate("+ (w_kmeans/2*0.85) +"," + ypadding/2 + ")")
 						.attr("font-size", "22px")
 						.attr("font-weight", "bold")
 						.attr("id", "kmeans_title")
@@ -531,7 +530,7 @@
 				
 				});
 			
-				//On click, update with new data			
+				//On click (button), update with new data			
 				d3.selectAll("button")
 					.on("click", function() {
 						
@@ -628,7 +627,7 @@
 							dataset = dataset2003;
 						}
 
-						//Update all circles
+						//Update all circles from scatter plot
 						svg.selectAll("circle")
 						   .data(dataset)
 						   .transition()
@@ -661,20 +660,19 @@
 							   })
 							   .attr("opacity", 1);
 						}
-					});
-				
-				//On click, update with new data			
-				d3.selectAll("button")
+					})
 					.on("mouseover", function() {
 						//See which button was hover-over
 						hoverID = d3.select(this).attr("id");
 						kmeans_number_temporal = hoverID.slice(-1);
+						//Update the k-means visualization with the hover-overed button
 						kmeans_function(kmeans_number_temporal);
 					})
 					.on("mouseout", function() {
+						//K-means for the last-clicked button
 						kmeans_function(kmeans_number);
 					});
-					
+				
 				//Function that calculates the kmeans visualization given the 'k' number
 				function kmeans_function(k) {
 					
