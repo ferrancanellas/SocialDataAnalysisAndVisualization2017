@@ -459,8 +459,8 @@
 						return projection([d.lon, d.lat])[1];
 					})
 					.attr("r", 2)
-
-					circles.style("fill", function(d) {
+					.attr("pointer-events", "none")
+					.style("fill", function(d) {
 						return colors_kmeans[parseInt(d.l2)];
 					});
 
@@ -479,6 +479,7 @@
 						return projection([d.lon, d.lat])[1];
 					})
 					.attr("r", 8)
+					.attr("pointer-events", "none")
 					.style("stroke", "black")
 					.style("fill", function(d){return colors_kmeans[d.color];})
 					.style("fill-opacity", function(d){
