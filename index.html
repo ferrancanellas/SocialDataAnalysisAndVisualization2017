@@ -432,7 +432,13 @@
 					.append("path")
 					.attr("d", path)
 					.style("fill", "gainsboro")
-					.style("stroke", "dimgray");
+					.style("stroke", "dimgray")
+					.on("mouseover", function(d) {
+						d3.select(this).style("fill", "grey")
+					})
+					.on("mouseout", function(d) {
+						d3.select(this).style("fill", "gainsboro")
+					});
 				var layer1 = svg2.append('g')
 				var labels = svg2.append('g')
 				var layer2 = svg2.append('g');
