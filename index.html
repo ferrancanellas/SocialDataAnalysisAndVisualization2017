@@ -664,9 +664,14 @@
 					.on("mouseover", function() {
 						//See which button was hover-over
 						hoverID = d3.select(this).attr("id");
-						kmeans_number_temporal = hoverID.slice(-1);
-						//Update the k-means visualization with the hover-overed button
-						kmeans_function(kmeans_number_temporal);
+						kmeans_number_temporal = hoverID.charAt(0);
+						//If the button is one of the k-means buttons
+						if (kmeans_number_temporal == "k") {
+							//Get the last char of the string
+							kmeans_number_temporal = hoverID.slice(-1);
+							//Update the k-means visualization with the hover-overed button
+							kmeans_function(kmeans_number_temporal);
+						}
 					})
 					.on("mouseout", function() {
 						//K-means for the last-clicked button
